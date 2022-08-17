@@ -19,6 +19,12 @@ export interface ICategory{
   attributes:ICategoryAttribute;
 }
 
+export interface IPropTypes{
+  categories : {
+    items:ICategory[]
+  };
+}
+
 export interface ICategoryAttribute{
   Title:string;
   Slug : string;
