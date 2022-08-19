@@ -2,6 +2,7 @@ import Link from 'next/link';
 import React from 'react'
 import { IArticle } from '../types'
 import Image from 'next/image';
+import {formatDate} from '../utils'
 interface IPropTypes{
   article:IArticle;
 }
@@ -16,7 +17,7 @@ const BlogCard = ({article}:IPropTypes) => {
       </Link>
 
       <div className='flex items-center my-4'>
-        <div>
+        <div className='rounded-lg overflow-hidden flex items-center justify-center mr-2'>
          <Image
             src={`http://localhost:1337${article.attributes.author.data.attributes.avatar.data.attributes.url}`}
             height={40}
@@ -28,9 +29,14 @@ const BlogCard = ({article}:IPropTypes) => {
             {article.attributes.author.data.attributes.lastname} on
             &nbsp;
             <span className="text-gray-400">
-                {article.attributes.createdAt}
+            {formatDate(article.attributes.createdAt)}
             </span>
         </span>
+      </div>
+      
+      <div className="text-gray-500">
+          {article.attributes.shortDescription.slice(0, 250)}{' '}
+          {article.attributes.shortDescription.length > 250 ? '...' : ''}
       </div>
     </div>
   )

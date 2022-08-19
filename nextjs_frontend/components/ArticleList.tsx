@@ -1,21 +1,27 @@
-import React from 'react'
-import { IArticle } from '../types'
-import BlogCard from './BlogCard'
+import React from "react";
+import { IArticle } from "../types";
+import BlogCard from "./BlogCard";
+import BlogCardWithImage from "./BlogCardWithImage";
 
-
-interface IPropTypes{
-  articles:IArticle[]
+interface IPropTypes {
+  articles: IArticle[];
 }
-const ArticleList = ({articles}:IPropTypes) => {
+const ArticleList = ({ articles }: IPropTypes) => {
   return (
-    <div className='grid lg:grid-cols-2 grid-gap gap-16 mt-16'>
-      {
-        articles.map(article =>{
-          return <BlogCard article={article} key={article.id}/>
-        })
-      }
+    <div className="grid lg:grid-cols-2 grid-gap gap-16 mt-16">
+      {articles.map((article, idx) => {
+        return (
+          <div key={article.id}>
+            {idx == 1 ? (
+              <BlogCardWithImage article={article} />
+            ) : (
+              <BlogCard article={article} />
+            )}
+          </div>
+        );
+      })}
     </div>
-  )
-}
+  );
+};
 
-export default ArticleList
+export default ArticleList;

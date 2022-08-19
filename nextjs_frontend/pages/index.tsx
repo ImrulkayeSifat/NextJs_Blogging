@@ -17,7 +17,9 @@ const Home: NextPage<IPropTypes> = ({categories,articles}) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Tab categories={categories} />
+      <Tab categories={categories} articles={{
+        items: []
+      }} />
 
       {/* Articles */}
       <ArticleList articles={articles.items}/>
