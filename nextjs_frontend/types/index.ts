@@ -24,7 +24,7 @@ export interface IPropTypes{
     items:ICategory[]
   };
   articles:{
-    items:IArticle[]
+    items:IArticle[];
   }
 }
 
@@ -79,3 +79,5 @@ export interface IImageData {
     }
   }
 }
+
+export type TDirection = 1 | -1;

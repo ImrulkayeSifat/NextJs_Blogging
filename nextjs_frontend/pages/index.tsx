@@ -4,11 +4,23 @@ import Head from 'next/head'
 import ArticleList from '../components/ArticleList'
 import Tab from '../components/Tab'
 import { fetchArticles, fetchCategories } from '../http'
-import { IArticle, ICategory, ICollectionResponse, IPropTypes } from '../types'
+import { IArticle, ICategory, ICollectionResponse, IPagination } from '../types'
 import qs from 'qs';
 import QueryString from 'qs'
+import Pagination from '../components/Pagination'
+
+interface IPropTypes{
+  categories : {
+    items:ICategory[]
+  };
+  articles:{
+    items:IArticle[];
+    pagination: IPagination;
+  }
+}
 
 const Home: NextPage<IPropTypes> = ({categories,articles}) => {
+  const { page, pageCount } = articles.pagination;
   return (
     <div>
       <Head>
@@ -23,22 +35,26 @@ const Home: NextPage<IPropTypes> = ({categories,articles}) => {
 
       {/* Articles */}
       <ArticleList articles={articles.items}/>
-
+      <Pagination page={page} pageCount={pageCount} />
     </div>
   )
 }
 
-export const getServerSideProps:GetServerSideProps=async()=>{
+export const getServerSideProps:GetServerSideProps=async({ query })=>{
  
   const options = {
     populate:['author.avatar'],
-    sort:['id:desc']
+    sort:['id:desc'],
+    pagination: {
+      page: query.page ? +query.page : 1,
+      pageSize: 2,
+    },
   }
   const queryString = qs.stringify(options);
   
   //Articles
   const {data:articles}:AxiosResponse<ICollectionResponse<IArticle[]>> =await fetchArticles(queryString);
-  console.log(JSON.stringify(articles));
+
   //categories
   const {data:categories}:AxiosResponse<ICollectionResponse<ICategory[]>> =await fetchCategories();
 

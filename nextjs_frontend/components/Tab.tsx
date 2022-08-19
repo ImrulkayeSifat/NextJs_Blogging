@@ -22,7 +22,7 @@ const Tab = ({categories}:IPropTypes) => {
             router.pathname === '/' ? 'border-primary text-primary' : 'border-white text-gray-400'
           }`
         }>
-          <Link href="#">
+          <Link href="/">
             Recent
           </Link>
         </li>
