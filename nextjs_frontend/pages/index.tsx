@@ -2,11 +2,11 @@ import { AxiosResponse } from 'axios'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import Tab from '../components/Tab'
-import { fetchCategories } from '../http'
-import { ICategory, ICollectionResponse, IPropTypes } from '../types'
+import { fetchArticles, fetchCategories } from '../http'
+import { IArticle, ICategory, ICollectionResponse, IPropTypes } from '../types'
 
 
-const Home: NextPage<IPropTypes> = ({categories}) => {
+const Home: NextPage<IPropTypes> = ({categories,articles}) => {
   return (
     <div>
       <Head>
@@ -15,25 +15,32 @@ const Home: NextPage<IPropTypes> = ({categories}) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Tab categories={categories} />
+      <Tab categories={categories} articles={{
+        items: []
+      }} />
 
-      <main >
-        <h1 className='text-green-100'>
-          Welcome to Next Js
-        </h1>
-      </main>
+      {/* Articles */}
+
+
     </div>
   )
 }
 
 export const getServerSideProps:GetServerSideProps=async()=>{
-  
+  //Articles
+  const {data:articles}:AxiosResponse<ICollectionResponse<IArticle[]>> =await fetchArticles();
+
+  //categories
   const {data:categories}:AxiosResponse<ICollectionResponse<ICategory[]>> =await fetchCategories();
 
   return{
     props:{
       categories:{
         items:categories.data
+      },
+      articles:{
+        items:articles.data,
+        pagination:articles.meta.pagination
       }
     }
   }

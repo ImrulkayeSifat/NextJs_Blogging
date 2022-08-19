@@ -23,6 +23,9 @@ export interface IPropTypes{
   categories : {
     items:ICategory[]
   };
+  articles:{
+    items:IArticle[]
+  }
 }
 
 export interface ICategoryAttribute{
@@ -31,4 +34,51 @@ export interface ICategoryAttribute{
   createdAt :string;
   updatedAt :string;
   publishedAt:string;
+}
+
+export interface IArticle {
+  id:number;
+  attributes:IArticleAttribute;
+}
+
+export interface IArticleAttribute {
+  Title : string;
+  body : string;
+  Slug : string;
+  image : IImageData;
+  createdAt : string;
+  author : IAuthor;
+}
+
+export interface IAuthor{
+  data:{
+    attributes:{
+      firstname:string;
+      lastname:string;
+      avatar:{
+        data:{
+          attributes:{
+            formats:{
+              thumbnail:{
+                url:string;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+export interface IImageData {
+  data:{
+    attributes:{
+      name:string;
+      formats:{
+        small:{
+          url:string;
+        }
+      }
+    }
+  }
 }
