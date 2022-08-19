@@ -1,10 +1,12 @@
 import { AxiosResponse } from 'axios'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
+import ArticleList from '../components/ArticleList'
 import Tab from '../components/Tab'
 import { fetchArticles, fetchCategories } from '../http'
 import { IArticle, ICategory, ICollectionResponse, IPropTypes } from '../types'
-
+import qs from 'qs';
+import QueryString from 'qs'
 
 const Home: NextPage<IPropTypes> = ({categories,articles}) => {
   return (
@@ -15,21 +17,26 @@ const Home: NextPage<IPropTypes> = ({categories,articles}) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Tab categories={categories} articles={{
-        items: []
-      }} />
+      <Tab categories={categories} />
 
       {/* Articles */}
-
+      <ArticleList articles={articles.items}/>
 
     </div>
   )
 }
 
 export const getServerSideProps:GetServerSideProps=async()=>{
+ 
+  const options = {
+    populate:['author.avatar'],
+    sort:['id:desc']
+  }
+  const queryString = qs.stringify(options);
+  
   //Articles
-  const {data:articles}:AxiosResponse<ICollectionResponse<IArticle[]>> =await fetchArticles();
-
+  const {data:articles}:AxiosResponse<ICollectionResponse<IArticle[]>> =await fetchArticles(queryString);
+  console.log(JSON.stringify(articles));
   //categories
   const {data:categories}:AxiosResponse<ICollectionResponse<ICategory[]>> =await fetchCategories();
 
