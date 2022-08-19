@@ -4,10 +4,11 @@ import Head from 'next/head'
 import ArticleList from '../components/ArticleList'
 import Tab from '../components/Tab'
 import { fetchArticles, fetchCategories } from '../http'
-import { IArticle, ICategory, ICollectionResponse, IPagination } from '../types'
+import { IArticle, ICategory, ICollectionResponse, IPagination, IQueryOptions } from '../types'
 import qs from 'qs';
-import QueryString from 'qs'
 import Pagination from '../components/Pagination'
+import { useRouter } from 'next/router'
+import { debounce } from '../utils';
 
 interface IPropTypes{
   categories : {
@@ -20,7 +21,11 @@ interface IPropTypes{
 }
 
 const Home: NextPage<IPropTypes> = ({categories,articles}) => {
+  const router = useRouter();
   const { page, pageCount } = articles.pagination;
+  const handleSearch = (query: string) => {
+    router.push(`/?search=${query}`);
+  };
   return (
     <div>
       <Head>
@@ -29,9 +34,7 @@ const Home: NextPage<IPropTypes> = ({categories,articles}) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Tab categories={categories} articles={{
-        items: []
-      }} />
+      <Tab categories={categories} handleOnSearch={debounce(handleSearch, 500)}/>
 
       {/* Articles */}
       <ArticleList articles={articles.items}/>
@@ -42,7 +45,7 @@ const Home: NextPage<IPropTypes> = ({categories,articles}) => {
 
 export const getServerSideProps:GetServerSideProps=async({ query })=>{
  
-  const options = {
+  const options: IQueryOptions = {
     populate:['author.avatar'],
     sort:['id:desc'],
     pagination: {
@@ -50,6 +53,15 @@ export const getServerSideProps:GetServerSideProps=async({ query })=>{
       pageSize: 2,
     },
   }
+
+  if (query.search) {
+    options.filters = {
+        Title: {
+            $containsi: query.search,
+        },
+    };
+  }
+
   const queryString = qs.stringify(options);
   
   //Articles
