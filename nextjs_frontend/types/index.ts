@@ -1,3 +1,5 @@
+import { MDXRemoteSerializeResult } from "next-mdx-remote";
+
 export interface ICollectionResponse<T>{
   data:T;
   meta:IResourceMeta;
@@ -43,7 +45,7 @@ export interface IArticle {
 
 export interface IArticleAttribute {
   Title : string;
-  body : string;
+  body : string | MDXRemoteSerializeResult;
   Slug : string;
   image : IImageData;
   createdAt : string;
@@ -70,8 +72,10 @@ export interface IAuthor{
 export interface IImageData {
   data:{
     attributes:{
+      url: any;
       name:string;
       formats:{
+        thumbnail: any;
         small:{
           url:string;
         }
